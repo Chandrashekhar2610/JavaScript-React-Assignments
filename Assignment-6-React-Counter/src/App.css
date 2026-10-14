@@ -1,0 +1,137 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #dbeafe, #ede9fe);
+    color: #1e293b;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.counter-card {
+    width: 400px;
+    max-width: 100%;
+    background: #ffffff;
+    padding: 35px 28px;
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(30, 41, 59, 0.15);
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    color: #312e81;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.count-display {
+    margin: 25px 0 15px;
+    padding: 25px;
+    background: #eef2ff;
+    border-radius: 16px;
+    border: 2px solid #c7d2fe;
+}
+
+.count-display span {
+    font-size: 58px;
+    font-weight: bold;
+    color: #4338ca;
+    overflow-wrap: anywhere;
+}
+
+.message {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 9px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.increase {
+    background: #16a34a;
+}
+
+.decrease {
+    background: #dc2626;
+}
+
+.reset {
+    background: #475569;
+}
+
+.footer {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 24px;
+}
+
+@media (max-width: 450px) {
+    .counter-card {
+        padding: 25px 18px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+}

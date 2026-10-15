@@ -1,5 +1,5 @@
 
-name: Deploy All Six Assignments
+name: Deploy Assignments to GitHub Pages
 
 on:
   push:
@@ -17,12 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -33,43 +29,78 @@ jobs:
         with:
           node-version: 22
 
-      - name: Prepare website folder
-        run: |
-          mkdir -p _site
-          cp index.html _site/index.html
-
-      - name: Copy JavaScript assignments
-        run: |
-          cp -R Assignment-1-JS-Calculator _site/
-          cp -R Assignment-2-Todo-List _site/
-          cp -R Assignment-3-Form-Validation _site/
-
-      - name: Build React assignments
-        run: |
-          for folder in \
-            Assignment-4-React-Profile-Card \
-            Assignment-5-React-Controlled-Form \
-            Assignment-6-React-Counter
-          do
-            echo "Building $folder"
-
-            cd "$GITHUB_WORKSPACE/$folder"
-
-            npm ci
-            npm run build -- --base=./
-
-            mkdir -p "$GITHUB_WORKSPACE/_site/$folder"
-            cp -R dist/. "$GITHUB_WORKSPACE/_site/$folder/"
-          done
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload website
+      - name: Prepare website
+        shell: bash
+        run: |
+          set -e
+          mkdir -p site
+
+          cp index.html site/index.html
+
+          for d in \
+            Assignment-1-JS-Calculator \
+            Assignment-2-Todo-List \
+            Assignment-3-Form-Validation
+          do
+            mkdir -p "site/$d"
+            rsync -a \
+              --exclude node_modules \
+              --exclude .git \
+              "$d/" "site/$d/"
+          done
+
+      - name: Build React Profile Card
+        working-directory: Assignment-4-React-Profile-Card
+        run: |
+          npm install
+          npm run build
+
+      - name: Copy Profile Card build
+        run: |
+          mkdir -p site/Assignment-4-React-Profile-Card
+          cp -R Assignment-4-React-Profile-Card/dist/. \
+            site/Assignment-4-React-Profile-Card/
+
+      - name: Build React Controlled Form
+        working-directory: Assignment-5-React-Controlled-Form
+        run: |
+          npm install
+          npm run build
+
+      - name: Copy Controlled Form build
+        run: |
+          mkdir -p site/Assignment-5-React-Controlled-Form
+          cp -R Assignment-5-React-Controlled-Form/dist/. \
+            site/Assignment-5-React-Controlled-Form/
+
+      - name: Build React Counter
+        working-directory: Assignment-6-React-Counter
+        run: |
+          npm install
+          npm run build
+
+      - name: Copy Counter build
+        run: |
+          mkdir -p site/Assignment-6-React-Counter
+          cp -R Assignment-6-React-Counter/dist/. \
+            site/Assignment-6-React-Counter/
+
+      - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: site
 
-      - name: Deploy website
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
